@@ -487,7 +487,6 @@ if (stage === "await_ponto_choice") {
   return res.sendStatus(200);
 }
 
-
     // “Deseja voltar ao Menu Inicial? sim/não"
     if (stage === "await_back_menu") {
       if (["sim", "s"].includes(n)) {
