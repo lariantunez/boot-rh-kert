@@ -159,7 +159,7 @@ const PASSO_INFORME = [
 const ASK_BACK = "Deseja voltar ao Menu Inicial?\\nSim\\nNão";
 const THANKS = "Atendimento encerrado. Obrigado por entrar em contato com o RH Kert! Se precisar de mais informações, é só mandar uma nova mensagem. 😉";
 
-const ASK_HANDOVER = "Como posso te ajudar agora?\n\n1️⃣ Retornar ao Menu inicial\n2️⃣ Aguardar o atendimento humano";
+const ASK_HANDOVER = "Como posso te ajudar agora?\n\n1️⃣ Retornar ao Menu inicial\n\n2️⃣ Aguardar o atendimento humano";
 
 
 // envia saudação + menu (com intervalo de 1s)
@@ -486,6 +486,7 @@ if (stage === "await_ponto_choice") {
   }
   return res.sendStatus(200);
 }
+
 
     // “Deseja voltar ao Menu Inicial? sim/não"
     if (stage === "await_back_menu") {
