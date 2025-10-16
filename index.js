@@ -43,7 +43,7 @@ const ROOT_MENU = [
   "3️⃣ Dúvidas sobre holerite",
 "",
   "4️⃣ Falar com atendente",
-].join("\n");
+].join("\\n");
 
 // -------Menu 1 Informações sobre Ponto (Multi / My Ahgora)-------
 const PONTO_MENU = [
@@ -62,7 +62,7 @@ const PONTO_MENU = [
   "6️⃣ Falar com atendente",
  "",
   "7️⃣ Retornar ao menu inicial",
-].join("\n");
+].join("\\n");
 
 // ----------- Menu 2 Folha & Benefícios (Meu RH / TOTVS) --------
 const FOLHA_MENU = [
@@ -81,7 +81,7 @@ const FOLHA_MENU = [
   "6️⃣ Retornar ao menu inicial",
 "",
   "7️⃣ Falar com atendente",
-].join("\n");
+].join("\\n");
 
 
 //---------Sub Menus da opção 2 (Folha & Benefícios (Meu RH / TOTVS)) -----------------
@@ -97,7 +97,7 @@ const PASSO_ATESTADO = [
   "",
    "*Acesse o vídeo com o tutorial:*",
   "⏯️ https://youtube.com/shorts/RL4oRAvbiOI",
-].join("\n");
+].join("\\n");
 
 const PASSO_HIST_PAGAMENTOS = [
   "*Passo a passo para acessar histórico de pagamentos:*",
@@ -109,7 +109,7 @@ const PASSO_HIST_PAGAMENTOS = [
   "",
    "*Acesse o vídeo com o tutorial:*",
   "⏯️ https://youtube.com/shorts/EUcOXLcAAW8",
-].join("\n");
+].join("\\n");
 
 const PASSO_HIST_SALARIAL = [
   "*Passo a passo para consultar o histórico salarial:*",
@@ -123,7 +123,7 @@ const PASSO_HIST_SALARIAL = [
   "",
    "*Acesse o vídeo com o tutorial:*",
   "⏯️ https://youtube.com/shorts/tSYB3c9iS_I",
-].join("\n");
+].join("\\n");
 
 const PASSO_FERIAS = [
   "*Passo a passo para solicitar/consultar férias*",
@@ -138,7 +138,7 @@ const PASSO_FERIAS = [
   "",
    "*Acesse o vídeo com o tutorial:*",
   "⏯️ https://youtube.com/shorts/qBv-vQE3srI",
-].join("\n");
+].join("\\n");
 
 const PASSO_INFORME = [
   "*Passo a passo para consultar informe de rendimentos*",
@@ -150,12 +150,14 @@ const PASSO_INFORME = [
   "",
    "*Acesse o vídeo com o tutorial:*",
   "⏯️ https://youtube.com/shorts/d4JYoBy1qns",
-].join("\n");
+].join("\\n");
 
 // -----------------------------------------------------
 
-const ASK_BACK = "Deseja voltar ao Menu Inicial?\nSim\nNão";
+const ASK_BACK = "Deseja voltar ao Menu Inicial?\\nSim\\nNão";
 const THANKS = "Atendimento encerrado. Obrigado por entrar em contato com o RH Kert! Se precisar de mais informações, é só mandar uma nova mensagem. 😉";
+
+const ASK_HANDOVER = "Como posso te ajudar agora?\n\n1 - Retornar ao Menu inicial\n2 - Aguardar o atendimento humano";
 
 // envia saudação + menu (com intervalo de 1s)
 async function sendWelcomeAndMenu(to) {
@@ -187,7 +189,7 @@ const PASSO_REGISTRAR = [
   "",
    "*Acesse o vídeo com o tutorial:*",
   "⏯️ https://youtube.com/shorts/CVFHhDx3K9k",
-].join("\n");
+].join("\\n");
 
 const PASSO_ESPELHO = [
   "*Passo a passo para acessar o espelho de ponto:*",
@@ -200,7 +202,7 @@ const PASSO_ESPELHO = [
   "",
    "*Acesse o vídeo com o tutorial:*",
   "⏯️ https://youtube.com/shorts/ZVTW7ijmqy8",
-].join("\n");
+].join("\\n");
 
 const PASSO_ABONO = [
   "*Passo a passo para solicitar um abono:*",
@@ -216,7 +218,7 @@ const PASSO_ABONO = [
   "",
    "*Acesse o vídeo com o tutorial:*",
   "⏯️ https://youtube.com/shorts/wdHo_ZivPbM",
-].join("\n");
+].join("\\n");
 
 const PASSO_CANCELAR_BATIDA = [
   "*Passo a passo para solicitar o cancelamento de uma batida de ponto*",
@@ -232,7 +234,7 @@ const PASSO_CANCELAR_BATIDA = [
   "",
   "*Acesse o vídeo com o tutorial:*",
   "⏯️ https://youtube.com/shorts/SFn-UeU7Zhk",
-].join("\n");
+].join("\\n");
 
 const PASSO_INCLUIR = [
   "*Passo a passo para solicitar a inclusão de uma batida de ponto*",
@@ -247,11 +249,11 @@ const PASSO_INCLUIR = [
   "",
   "*Acesse o vídeo com o tutorial:*",
   "⏯️ https://youtube.com/shorts/V3FTCac-67c",
-].join("\n");
+].join("\\n");
 
 const PASSO_ATENDENTE = [
   "🔄 Encaminhando para um atendente humano. Aguarde um momento...",
-].join("\n");
+].join("\\n");
 
 // --- state machine --- O state machine é a parte do código que controla em que etapa da conversa o usuário está.
 const state = new Map(); // phone -> stage
@@ -500,9 +502,31 @@ if (stage === "await_ponto_choice") {
       return res.sendStatus(200);
     }
 
-    // estado handover: não interferir, não encerrar
+    // estado handover: oferecer saída do handover
     if (stage === "handover") {
+      await sendText(from, ASK_HANDOVER);
+      state.set(from, "await_handover_choice");
       return res.sendStatus(200);
+    }
+
+    // estado: aguarda escolha após handover
+    if (stage === "await_handover_choice") {
+      if (n === "1") {
+        // voltar ao menu inicial
+        await sendRootMenu(from);
+        state.set(from, "await_main_choice");
+        return res.sendStatus(200);
+      } else if (n === "2") {
+        // permanecer aguardando humano (reconfirma)
+        await sendText(from, "🔄 Encaminhando para um atendente humano. Aguarde um momento...");
+        state.set(from, "handover");
+        stopInactivity(from); // mantém regra de não encerrar por inatividade no handover
+        return res.sendStatus(200);
+      } else {
+        await sendText(from, "Não consegui identificar sua resposta. Por favor, escolha uma das opções.");
+        await sendText(from, ASK_HANDOVER);
+        return res.sendStatus(200);
+      }
     }
 
     // fallback de segurança: volta para o menu principal (sem saudação)
