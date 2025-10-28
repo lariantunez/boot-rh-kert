@@ -1,18 +1,22 @@
 {
-  "name": "boot-rh-kert",
+  "name": "bot-rh-whatsapp",
   "version": "1.0.0",
-  "description": "Bot WhatsApp do RH (Kert)",
+  "description": "",
   "main": "index.js",
   "scripts": {
+    "dev": "nodemon index.js",
     "start": "node index.js"
   },
-  "engines": {
-    "node": ">=18"
-  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
     "axios": "^1.11.0",
     "dotenv": "^17.2.1",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "nodemailer": "^7.0.10"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
   }
 }
-
